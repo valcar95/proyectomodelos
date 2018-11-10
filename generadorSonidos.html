@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+<script>
+var limiteInferiorFrecuencia=20;
+var limiteSuperiorFrecuencia=20000;
+var ugens=["whiteNoise","pinkNoise","lfNoise","blit","saw","lfSaw","lfPulse","impulse","square","tri","phasor","sin"];
+var numeroRegistros=10000;
+var sonidosConcurrentes=3;
+
+function generarSonidos(){
+var registros=[];
+var registro=[];
+for(var i=1; i<=sonidosConcurrentes; i++){
+	registro.push("frecuencia"+i);
+	registro.push("ugen"+i);
+}
+registros.push(registro);
+
+for(var i=0; i<numeroRegistros; i++){
+	registro=[];
+	for(var j=1; j<=sonidosConcurrentes; j++){
+		var frecuencia=Math.floor(Math.random() * (limiteSuperiorFrecuencia-limiteInferiorFrecuencia)) + limiteInferiorFrecuencia;
+		var indexUgen=Math.floor(Math.random() * (ugens.length));
+		registro.push(frecuencia);
+		registro.push(indexUgen);
+	}
+	registros.push(registro);
+}
+let csvContent = "data:text/csv;charset=utf-8,";
+registros.forEach(function(arrayRegistro){
+   csvContent += arrayRegistro.join(",") + "\r\n";
+}); 
+
+var encodedUri = encodeURI(csvContent);
+var link = document.createElement("a");
+link.setAttribute("href", encodedUri);
+link.setAttribute("download", "sonidos.csv");
+document.body.appendChild(link); // Required for FF
+
+link.click(); // This will download the data file named "my_data.csv".
+}
+</script>
+</head>
+
+<body>
+<button onclick="generarSonidos()">Generar sonidos</button>
+</body>
+
+</html>
